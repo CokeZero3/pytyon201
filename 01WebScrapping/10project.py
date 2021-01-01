@@ -22,7 +22,10 @@ def create_soup(url):
     res.raise_for_status()
     soup = BeautifulSoup(res.text, "lxml")
     return soup
-    
+def print_news(index, title, link):
+        print("{}. {}".format(index+1, title))
+        print(" (링크: {})".format(link))
+        
 def scrape_weather():
     now = datetime.now()
     print("[{}년 {}월 {}일, 오늘의 날씨]".format(now.year, now.month, now.day))
@@ -57,19 +60,38 @@ def scrape_weather():
 
 def scrape_headline_news():
     print("[헤드라인 뉴스]")
-    url ="https://news.naver.com"
+    url ="http://news.naver.com"
     soup = create_soup(url)
-    news_list = soup.find("ul", attrs={"class":"hdline_article_list"}).find_all("li")
+    news_list = soup.find("ul", attrs={"class":"hdline_article_list"}).find_all("li", limit=3)
     
     for index, news in enumerate(news_list):
         title = news.find("a").get_text().strip()
         link = url + news.find("a")["href"]
-        print("{}. {}".fomrat(index+1, title))
-        print(" (링크: {})".format(link))
-    print()
+        print_news(index, title, link)       
+    print()       
     
+
+def scrape_it_news():
+    print("[IT 뉴스]")
+    url = "http://news.naver.com/main/list.nhn?mode=LS2D&mid=shm&sid1=105&sid2=230"
+    soup = create_soup(url)
+    news_list = soup.find("ul", attrs={"class","type06_headline"}).find_all("li", limit=3)
+    for index, news in enumerate(news_list):
+        a_idx=0
+        img = news.find("img")
+        if img:
+            a_idx = 1 # img 태그가 있으면 1번째 a 태그의 정보를 사용
+        
+        atag= news.find_all("a")[a_idx]
+        title = news.find("a")[a_idx].get_text().strip()
+        link = url + news.find("a")["href"]
+        print_news(index, title, link)
+    print()       
+
+        
     
-                
+
 if __name__ == "__main__":
     # scrape_weather() #오늘의 날씨 정보 가져오기
-    scrape_headline_news()
+    # scrape_headline_news() #헤드라인 뉴스
+    scrape_it_news()
