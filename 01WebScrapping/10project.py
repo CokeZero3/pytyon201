@@ -73,7 +73,7 @@ def scrape_headline_news():
 
 def scrape_it_news():
     print("[IT 뉴스]")
-    url = "http://news.naver.com/main/list.nhn?mode=LS2D&mid=shm&sid1=105&sid2=230"
+    url = "https://news.naver.com/main/list.nhn?mode=LS2D&mid=shm&sid1=105&sid2=230"
     soup = create_soup(url)
     news_list = soup.find("ul", attrs={"class","type06_headline"}).find_all("li", limit=3)
     for index, news in enumerate(news_list):
@@ -86,7 +86,9 @@ def scrape_it_news():
         title = news.find("a")[a_idx].get_text().strip()
         link = url + news.find("a")["href"]
         print_news(index, title, link)
-    print()       
+    print()
+    
+def scrape_english():
 
         
     
@@ -94,4 +96,6 @@ def scrape_it_news():
 if __name__ == "__main__":
     # scrape_weather() #오늘의 날씨 정보 가져오기
     # scrape_headline_news() #헤드라인 뉴스
-    scrape_it_news()
+    # scrape_it_news() #IT 뉴스 정보 가져오기
+    srape_english()
+    
